@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+.vscode/
+.idea/
+
+# logs / temp
+*.log
+*.tmp
+.playwright-mcp/
+
+# never commit
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+
+# build artifacts (none currently — static site)
+dist/
+node_modules/
