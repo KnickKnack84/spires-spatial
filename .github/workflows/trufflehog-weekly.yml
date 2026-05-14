@@ -1,0 +1,46 @@
+# =====================================================================
+# Spires Spatial — TruffleHog weekly secret scan
+# =====================================================================
+# Why: public repo with a live GitHub Pages deployment. No private
+# creds expected, but a TruffleHog baseline scan is cheap insurance —
+# and if a third-party API key (Matterport, Asteroom, mailer service)
+# ever lands here, this catches it weekly.
+#
+# Pattern: TruffleHog weekly with `--only-verified`. Standalone secret-
+# scan layer — static HTML site, no Python app surface.
+#
+# Note: this repo is PUBLIC, so GitHub Code Scanning would be free here
+# (no GHAS license needed). Kept as TruffleHog-only artifact for
+# portfolio consistency; flip to SARIF + upload-sarif if Security tab
+# UI becomes useful.
+# =====================================================================
+name: TruffleHog (weekly secret scan)
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'  # Mondays 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trufflehog:
+    name: trufflehog-verified-only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history)
+        # actions/checkout@v4 — pinned to commit SHA for supply-chain hardening
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0  # TruffleHog needs full history to diff
+          persist-credentials: false  # don't write GITHUB_TOKEN to local git config before third-party action runs
+
+      - name: TruffleHog OSS scan
+        # trufflesecurity/trufflehog@v3.95.3 — pinned to release tag SHA.
+        # Intentionally NO `continue-on-error`: --only-verified findings
+        # are real, active, currently-leaked credentials by definition.
+        # If TruffleHog fires, the job MUST fail to draw attention.
+        uses: trufflesecurity/trufflehog@37b77001d0174ebec2fcca2bd83ff83a6d45a3ab
+        with:
+          extra_args: --only-verified
