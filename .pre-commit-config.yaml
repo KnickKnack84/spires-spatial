@@ -1,0 +1,7 @@
+# Minimal pre-commit config — gitleaks only. Per ~/.claude/reports/2026-05-13-
+# autonomous-git-workflow-soa.md s A: defense-in-depth secret scanning.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
