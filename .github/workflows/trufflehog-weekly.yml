@@ -36,8 +36,10 @@ jobs:
           fetch-depth: 0  # TruffleHog needs full history to diff
 
       - name: TruffleHog OSS scan
-        # trufflesecurity/trufflehog@v3.95.3 — pinned to release tag SHA
+        # trufflesecurity/trufflehog@v3.95.3 — pinned to release tag SHA.
+        # Intentionally NO `continue-on-error`: --only-verified findings
+        # are real, active, currently-leaked credentials by definition.
+        # If TruffleHog fires, the job MUST fail to draw attention.
         uses: trufflesecurity/trufflehog@37b77001d0174ebec2fcca2bd83ff83a6d45a3ab
         with:
           extra_args: --only-verified
-        continue-on-error: true  # weekly informational scan; surface findings without failing the workflow
