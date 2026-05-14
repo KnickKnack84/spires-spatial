@@ -34,6 +34,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0  # TruffleHog needs full history to diff
+          persist-credentials: false  # don't write GITHUB_TOKEN to local git config before third-party action runs
 
       - name: TruffleHog OSS scan
         # trufflesecurity/trufflehog@v3.95.3 — pinned to release tag SHA.
